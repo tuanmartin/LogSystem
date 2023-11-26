@@ -21,6 +21,7 @@ import {
 } from "@ant-design/icons";
 import { fetchList, delLog } from "./api";
 import moment from "moment";
+import * as XLSX from "xlsx";
 
 const ReportService = () => {
   const [current, setCurrent] = useState(1);
@@ -54,7 +55,17 @@ const ReportService = () => {
   }, [current, limit, filters]);
 
   const exportTest = async () => {
-    fetchData();
+    let offset = 0;
+    const dataExport = await fetchList({ offset }).data;
+    console.log(dataExport);
+    // Create a new workbook
+    const wb = XLSX.utils.book_new();
+    // Convert data to worksheet
+    const ws = XLSX.utils.json_to_sheet(dataExport);
+    // Add worksheet to workbook
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    // Write workbook and trigger download
+    XLSX.writeFile(wb, "Du_lieu_log.xlsx");
   };
 
   const handleDelete = (id) => {
