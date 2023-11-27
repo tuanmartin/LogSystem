@@ -112,6 +112,12 @@ const ReportService = () => {
 
   const commandsColumns = [
     {
+      title: "STT",
+      dataIndex: "STT",
+      key: "STT",
+      render: (_, record, index) => index + 1,
+    },
+    {
       title: "ID",
       dataIndex: "id",
       key: "id",
@@ -138,6 +144,7 @@ const ReportService = () => {
       title: "Log",
       dataIndex: "log",
       key: "log",
+      ellipsis: true,
     },
     {
       title: "Tác vụ",
