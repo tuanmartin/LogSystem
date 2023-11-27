@@ -54,14 +54,28 @@ const ReportService = () => {
     fetchData((current - 1) * limit, limit);
   }, [current, limit, filters]);
 
+  const formatDateValue = (timestamp) => {
+    if (!timestamp) return null;
+    return new Date(Number(timestamp)).toLocaleDateString("vi-VN", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+  };
+
   const exportTest = async () => {
     let offset = 0;
-    const dataExport = await fetchList({ offset }).data;
-    console.log(dataExport);
+    const dataExport = await fetchList({ offset });
+
+    const formattedData = dataExport.data.map((item) => ({
+      ...item,
+      created_at: formatDateValue(item.created_at),
+    }));
+
     // Create a new workbook
     const wb = XLSX.utils.book_new();
     // Convert data to worksheet
-    const ws = XLSX.utils.json_to_sheet(dataExport);
+    const ws = XLSX.utils.json_to_sheet(formattedData);
     // Add worksheet to workbook
     XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
     // Write workbook and trigger download
@@ -92,15 +106,6 @@ const ReportService = () => {
     });
   };
 
-  const formatDateValue = (timestamp) => {
-    if (!timestamp) return null;
-    return new Date(Number(timestamp)).toLocaleDateString("vi-VN", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    });
-  };
-
   const commandsColumns = [
     {
       title: "ID",
@@ -122,8 +127,8 @@ const ReportService = () => {
     },
     {
       title: "Địa chỉ IP",
-      dataIndex: "IP",
-      key: "IP",
+      dataIndex: "ip",
+      key: "ip",
     },
     {
       title: "Log",
@@ -154,12 +159,13 @@ const ReportService = () => {
     const newFilters = {
       ...filters,
       // Convert dates to timestamps or required format
-      date_from: values.date_from ? moment(values.date_from).valueOf() : "",
-      date_to: values.date_to ? moment(values.date_to).valueOf() : "",
+      date_from: values.date_from ? values.date_from.valueOf() : "",
+      date_to: values.date_to ? values.date_to.valueOf() : "",
       keyword: values.keyword || "",
       ip: values.ip || "",
     };
     setFilters(newFilters);
+    console.log(newFilters);
   };
 
   const handleResetFilter = async () => {

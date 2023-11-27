@@ -71,7 +71,7 @@ function App() {
 
             <Content style={{ padding: 24, margin: 0, minHeight: 280 }}>
               <Routes>
-                <Route path="/thong-tin" element={<UserInfo />} />
+                {/* <Route path="/thong-tin" element={<UserInfo />} /> */}
                 <Route path="/bao-cao" element={<ReportService />} />
               </Routes>
             </Content>
