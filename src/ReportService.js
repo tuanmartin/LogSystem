@@ -64,10 +64,14 @@ const ReportService = () => {
   };
 
   const exportTest = async () => {
-    let offset = 0;
-    const dataExport = await fetchList({ offset });
+    const params = {
+      ...filters, // Spread the filters object
+      offset: 0,
+    };
+    const dataExport = await fetchList(params);
 
-    const formattedData = dataExport.data.map((item) => ({
+    const formattedData = dataExport.data.map((item, index) => ({
+      STT: index + 1,
       ...item,
       created_at: formatDateValue(item.created_at),
     }));
